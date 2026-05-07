@@ -1072,6 +1072,46 @@ const layer: Layer.Layer<
         const modelsDev = yield* modelsDevSvc.get()
         const database = mapValues(modelsDev, fromModelsDevProvider)
 
+        // Built-in Sandbox AI provider (forked default).
+        // Override endpoint with SANDBOXAI_BASE_URL; auth via SANDBOXAI_API_KEY or `sandboxai auth login`.
+        const sandboxBaseURL = process.env["SANDBOXAI_BASE_URL"] || "https://api.sandboxai.top/v1"
+        const sandboxDefaults: ModelsDev.Provider = {
+          id: "sandboxai",
+          name: "Sandbox AI",
+          api: sandboxBaseURL,
+          npm: "@ai-sdk/openai-compatible",
+          env: ["SANDBOXAI_API_KEY"],
+          models: {
+            "gpt-5.4-mini": {
+              id: "gpt-5.4-mini", name: "GPT 5.4 mini", release_date: "",
+              attachment: false, reasoning: false, temperature: true, tool_call: true,
+              limit: { context: 128000, output: 8192 },
+              modalities: { input: ["text"], output: ["text"] },
+            },
+            "gpt-5.4": {
+              id: "gpt-5.4", name: "GPT 5.4", release_date: "",
+              attachment: false, reasoning: false, temperature: true, tool_call: true,
+              limit: { context: 128000, output: 8192 },
+              modalities: { input: ["text"], output: ["text"] },
+            },
+            "gpt-5.5": {
+              id: "gpt-5.5", name: "GPT 5.5", release_date: "",
+              attachment: false, reasoning: false, temperature: true, tool_call: true,
+              limit: { context: 128000, output: 8192 },
+              modalities: { input: ["text"], output: ["text"] },
+            },
+            "gpt-5.5-openai-compact": {
+              id: "gpt-5.5-openai-compact", name: "GPT 5.5 compact", release_date: "",
+              attachment: false, reasoning: false, temperature: true, tool_call: true,
+              limit: { context: 128000, output: 8192 },
+              modalities: { input: ["text"], output: ["text"] },
+            },
+          },
+        }
+        if (!database["sandboxai"]) {
+          database[ProviderID.make("sandboxai")] = fromModelsDevProvider(sandboxDefaults)
+        }
+
         const providers: Record<ProviderID, Info> = {} as Record<ProviderID, Info>
         const languages = new Map<string, LanguageModelV3>()
         const modelLoaders: {

@@ -1,11 +1,11 @@
 import type { Hooks, PluginInput } from "@opencode-ai/plugin"
 
-const DEFAULT_BASE_URL = "https://api.sandboxai.top/v1"
+const PROVIDER_ID = "sandboxai"
 
 export async function SandboxAuthPlugin(_input: PluginInput): Promise<Hooks> {
   return {
     auth: {
-      provider: "sandboxai",
+      provider: PROVIDER_ID,
       methods: [
         {
           label: "API Key",
@@ -14,10 +14,9 @@ export async function SandboxAuthPlugin(_input: PluginInput): Promise<Hooks> {
             {
               type: "text",
               key: "key",
-              message: "Enter your Sandbox AI API key (get one at https://sandboxai.top)",
+              message: "Enter your Sandbox AI API key (https://sandboxai.top)",
               placeholder: "sk-...",
-              validate: (value: string) =>
-                value && value.trim().length > 0 ? undefined : "API key cannot be empty",
+              validate: (v: string) => (v && v.trim() ? undefined : "API key cannot be empty"),
             },
           ],
         },
@@ -27,14 +26,8 @@ export async function SandboxAuthPlugin(_input: PluginInput): Promise<Hooks> {
         if (auth.type !== "api") return {}
         return {
           apiKey: auth.key,
-          baseURL: DEFAULT_BASE_URL,
+          baseURL: process.env["SANDBOXAI_BASE_URL"] || "https://api.sandboxai.top/v1",
         }
-      },
-    },
-    provider: {
-      id: "sandboxai",
-      async models(provider) {
-        return provider.models
       },
     },
   }
