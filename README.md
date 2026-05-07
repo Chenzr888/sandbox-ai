@@ -4,7 +4,32 @@
 
 A terminal-based AI agent.
 
-## Dev
+## Quick start (one-shot install)
+
+```bash
+git clone https://github.com/ChenZR-ai/sandbox-ai.git
+cd sandbox-ai
+./install.sh
+```
+
+That puts a global `sandbox` command on your PATH (`~/.local/bin/sandbox`).
+Then:
+
+```bash
+sandbox auth login --provider sandboxai     # paste your API key from https://sandboxai.top
+sandbox                                     # launch TUI
+sandbox models | grep sandbox               # verify provider is wired
+```
+
+## Custom endpoint
+
+Point `sandbox` at your own OpenAI-compatible gateway:
+
+```bash
+SANDBOXAI_BASE_URL=https://your-gateway.example.com/v1 sandbox
+```
+
+## Dev (without installer)
 
 ```bash
 bun install
@@ -17,13 +42,11 @@ bun run dev --help
 bun run --cwd packages/opencode build
 ```
 
-## Auth
+## Uninstall
 
 ```bash
-sandboxai auth login sandboxai
+rm ~/.local/bin/sandbox
 ```
-
-Get your API key at https://sandboxai.top.
 
 ## License
 
