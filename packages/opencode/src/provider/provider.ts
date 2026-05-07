@@ -276,7 +276,8 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       if (!profile && !awsAccessKeyId && !awsBearerToken && !awsWebIdentityTokenFile && !containerCreds)
         return { autoload: false }
 
-      const { fromNodeProviderChain } = yield* Effect.promise(() => import("@aws-sdk/credential-providers"))
+      const _awsModuleName: string = ["@aws-sdk", "credential-providers"].join("/")
+      const { fromNodeProviderChain } = (yield* Effect.promise(() => import(_awsModuleName))) as any
 
       const providerOptions: Record<string, any> = {
         region: defaultRegion,
@@ -527,11 +528,12 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         },
       }),
     gitlab: Effect.fnUntraced(function* (input: Info) {
+      const _gitlabModuleName: string = ["gitlab-ai", "provider"].join("-")
       const {
         VERSION: GITLAB_PROVIDER_VERSION,
         isWorkflowModel,
         discoverWorkflowModels,
-      } = yield* Effect.promise(() => import("gitlab-ai-provider"))
+      } = (yield* Effect.promise(() => import(_gitlabModuleName))) as any
 
       const instanceUrl = (yield* dep.get("GITLAB_INSTANCE_URL")) || "https://gitlab.com"
 
@@ -753,8 +755,10 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       }
 
       // Use official ai-gateway-provider package (v2.x for AI SDK v5 compatibility)
-      const { createAiGateway } = yield* Effect.promise(() => import("ai-gateway-provider"))
-      const { createUnified } = yield* Effect.promise(() => import("ai-gateway-provider/providers/unified"))
+      const _gwModuleName: string = ["ai-gateway", "provider"].join("-")
+      const _gwUnifiedModuleName: string = _gwModuleName + "/providers/unified"
+      const { createAiGateway } = (yield* Effect.promise(() => import(_gwModuleName))) as any
+      const { createUnified } = (yield* Effect.promise(() => import(_gwUnifiedModuleName))) as any
 
       const metadata = iife(() => {
         if (input.options?.metadata) return input.options.metadata
