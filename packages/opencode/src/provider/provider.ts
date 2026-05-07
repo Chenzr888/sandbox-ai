@@ -239,7 +239,10 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       }
     }),
     "amazon-bedrock": Effect.fnUntraced(function* () {
-      const providerConfig = (yield* dep.config()).provider?.["amazon-bedrock"]
+      // sandbox-ai fork: @aws-sdk/credential-providers was uninstalled. Bail unless user explicitly configured bedrock.
+      const cfgCheck = (yield* dep.config()).provider?.["amazon-bedrock"]
+      if (!cfgCheck) return { autoload: false, options: {} }
+      const providerConfig = cfgCheck
       const auth = yield* dep.auth("amazon-bedrock")
       const env = yield* dep.env()
 
@@ -277,7 +280,11 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         return { autoload: false }
 
       const _awsModuleName: string = ["@aws-sdk", "credential-providers"].join("/")
-      const { fromNodeProviderChain } = (yield* Effect.promise(() => import(_awsModuleName))) as any
+      const awsMod: any = yield* Effect.promise(() =>
+        import(_awsModuleName).catch(() => null),
+      )
+      if (!awsMod) return { autoload: false, options: {} }
+      const { fromNodeProviderChain } = awsMod
 
       const providerOptions: Record<string, any> = {
         region: defaultRegion,
@@ -528,12 +535,17 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
         },
       }),
     gitlab: Effect.fnUntraced(function* (input: Info) {
+      // sandbox-ai fork: gitlab-ai-provider was uninstalled. Try to load; bail silently if missing.
       const _gitlabModuleName: string = ["gitlab-ai", "provider"].join("-")
+      const gitlabMod: any = yield* Effect.promise(() =>
+        import(_gitlabModuleName).catch(() => null),
+      )
+      if (!gitlabMod) return { autoload: false, options: {} }
       const {
         VERSION: GITLAB_PROVIDER_VERSION,
         isWorkflowModel,
         discoverWorkflowModels,
-      } = (yield* Effect.promise(() => import(_gitlabModuleName))) as any
+      } = gitlabMod
 
       const instanceUrl = (yield* dep.get("GITLAB_INSTANCE_URL")) || "https://gitlab.com"
 
@@ -757,8 +769,13 @@ function custom(dep: CustomDep): Record<string, CustomLoader> {
       // Use official ai-gateway-provider package (v2.x for AI SDK v5 compatibility)
       const _gwModuleName: string = ["ai-gateway", "provider"].join("-")
       const _gwUnifiedModuleName: string = _gwModuleName + "/providers/unified"
-      const { createAiGateway } = (yield* Effect.promise(() => import(_gwModuleName))) as any
-      const { createUnified } = (yield* Effect.promise(() => import(_gwUnifiedModuleName))) as any
+      const gwMod: any = yield* Effect.promise(() => import(_gwModuleName).catch(() => null))
+      const gwUnifiedMod: any = yield* Effect.promise(() =>
+        import(_gwUnifiedModuleName).catch(() => null),
+      )
+      if (!gwMod || !gwUnifiedMod) return { autoload: false, options: {} }
+      const { createAiGateway } = gwMod
+      const { createUnified } = gwUnifiedMod
 
       const metadata = iife(() => {
         if (input.options?.metadata) return input.options.metadata
