@@ -4,22 +4,22 @@
 
 A terminal-based AI agent.
 
-## Quick start (one-shot install)
+## Install (one line — needs no bun, no clone)
 
 ```bash
-git clone https://github.com/ChenZR-ai/sandbox-ai.git
-cd sandbox-ai
-./install.sh
+curl -fsSL https://raw.githubusercontent.com/ChenZR-ai/sandbox-ai/main/install.sh | bash
 ```
 
-That puts a global `sandbox` command on your PATH (`~/.local/bin/sandbox`).
-Then:
+That downloads the latest precompiled binary into `~/.local/bin/sandbox`. Then:
 
 ```bash
-sandbox auth login --provider sandboxai     # paste your API key from https://sandboxai.top
+sandbox auth login --provider sandboxai     # paste your key from https://sandboxai.top
 sandbox                                     # launch TUI
 sandbox models | grep sandbox               # verify provider is wired
 ```
+
+Supported platforms: `linux-x64`, `linux-arm64`, `darwin-x64`, `darwin-arm64`.
+For Windows, use the dev mode below.
 
 ## Custom endpoint
 
@@ -29,17 +29,28 @@ Point `sandbox` at your own OpenAI-compatible gateway:
 SANDBOXAI_BASE_URL=https://your-gateway.example.com/v1 sandbox
 ```
 
-## Dev (without installer)
+## Dev mode (run from source)
+
+If you want to hack on the code, clone the repo and use the source-mode launcher:
+
+```bash
+git clone https://github.com/ChenZR-ai/sandbox-ai.git
+cd sandbox-ai
+./install-dev.sh        # installs bun + deps, points `sandbox` at the source tree
+```
+
+Or run dev directly:
 
 ```bash
 bun install
 bun run dev --help
 ```
 
-## Build
+## Build a binary locally
 
 ```bash
-bun run --cwd packages/opencode build
+bun run --cwd packages/opencode script/build.ts --single --skip-embed-web-ui
+# binary at packages/opencode/dist/opencode-<os>-<arch>/bin/opencode
 ```
 
 ## Uninstall

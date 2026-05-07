@@ -1,0 +1,57 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g. v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: build linux-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - name: Install deps
+        run: bun install
+
+      - name: Build linux-x64 binary
+        working-directory: packages/opencode
+        run: bun run script/build.ts --single --skip-embed-web-ui
+
+      - name: Verify binary
+        working-directory: packages/opencode
+        run: |
+          ls -la dist/opencode-linux-x64/bin/
+          ./dist/opencode-linux-x64/bin/opencode --version
+
+      - name: Package tarball
+        working-directory: packages/opencode/dist
+        run: |
+          mv opencode-linux-x64 sandboxai-linux-x64
+          tar -czf sandboxai-linux-x64.tar.gz sandboxai-linux-x64
+          ls -la sandboxai-linux-x64.tar.gz
+
+      - name: Create / update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: packages/opencode/dist/sandboxai-linux-x64.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
