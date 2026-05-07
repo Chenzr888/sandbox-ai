@@ -4,7 +4,13 @@ import { Context, Effect, Layer, Record } from "effect"
 import * as Stream from "effect/Stream"
 import { streamText, wrapLanguageModel, type ModelMessage, type Tool, tool, jsonSchema } from "ai"
 import { mergeDeep } from "remeda"
-class GitLabWorkflowLanguageModel { private readonly __sandboxai_unused = true }
+class GitLabWorkflowLanguageModel {
+  sessionID?: string
+  systemPrompt?: string
+  sessionPreapprovedTools?: string[]
+  toolExecutor?: (toolName: string, argsJson: string, requestID: string) => Promise<{ result: string; error?: string; metadata?: any; title?: string }>
+  approvalHandler?: (approvalTools: { name: string; args: string }[]) => Promise<{ approved: boolean }>
+}
 import { ProviderTransform } from "@/provider/transform"
 import { Config } from "@/config/config"
 import { InstanceState } from "@/effect/instance-state"
