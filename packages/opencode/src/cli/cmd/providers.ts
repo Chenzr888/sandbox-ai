@@ -298,7 +298,7 @@ export const ProvidersLoginCommand = effectCmd({
   builder: (yargs) =>
     yargs
       .positional("url", {
-        describe: "opencode auth provider",
+        describe: "sandboxai auth provider",
         type: "string",
       })
       .option("provider", {
@@ -467,7 +467,7 @@ export const ProvidersLoginCommand = effectCmd({
     }
 
     if (provider === "opencode") {
-      yield* Prompt.log.info("Create an api key at https://opencode.ai/auth")
+      yield* Prompt.log.info("Create an api key at https://opencode.ai/auth (legacy opencode provider)")
     }
 
     if (provider === "sandboxai") {
