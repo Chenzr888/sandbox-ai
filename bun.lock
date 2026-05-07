@@ -64,7 +64,7 @@
       "name": "opencode",
       "version": "1.14.41",
       "bin": {
-        "opencode": "./bin/opencode",
+        "sandboxai": "./bin/sandboxai",
       },
       "dependencies": {
         "@actions/core": "1.11.1",
