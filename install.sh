@@ -2,8 +2,8 @@
 # Sandbox AI installer — downloads the latest precompiled binary.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/ChenZR-ai/sandbox-ai/main/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/ChenZR-ai/sandbox-ai/main/install.sh | bash -s -- --version v0.1.0
+#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/main/install.sh | bash -s -- --version v0.1.0
 #
 # What it does:
 #   1. Detect OS / arch (linux-x64 / linux-arm64 / darwin-x64 / darwin-arm64).
@@ -17,7 +17,7 @@
 
 set -euo pipefail
 
-REPO="ChenZR-ai/sandbox-ai"
+REPO="Chenzr888/sandbox-ai"
 BIN_NAME="${SANDBOX_BIN_NAME:-sandbox}"
 BIN_DIR="${SANDBOX_BIN_DIR:-$HOME/.local/bin}"
 VERSION=""
