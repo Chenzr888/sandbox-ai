@@ -2,8 +2,8 @@
 # Sandbox AI installer — downloads the latest precompiled binary.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/main/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/main/install.sh | bash -s -- --version v0.1.0
+#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/sandbox-ai-main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/sandbox-ai-main/install.sh | bash -s -- --version v0.1.0
 #
 # What it does:
 #   1. Detect OS / arch (linux-x64 / linux-arm64 / darwin-x64 / darwin-arm64).

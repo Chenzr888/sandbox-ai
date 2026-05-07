@@ -7,7 +7,7 @@ A terminal-based AI agent.
 ## Install (one line — needs no bun, no clone)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Chenzr888/sandbox-ai/sandbox-ai-main/install.sh | bash
 ```
 
 That downloads the latest precompiled binary into `~/.local/bin/sandbox`. Then:
