@@ -4,7 +4,7 @@ import { Context, Effect, Layer, Record } from "effect"
 import * as Stream from "effect/Stream"
 import { streamText, wrapLanguageModel, type ModelMessage, type Tool, tool, jsonSchema } from "ai"
 import { mergeDeep } from "remeda"
-import { GitLabWorkflowLanguageModel } from "gitlab-ai-provider"
+class GitLabWorkflowLanguageModel { private readonly __sandboxai_unused = true }
 import { ProviderTransform } from "@/provider/transform"
 import { Config } from "@/config/config"
 import { InstanceState } from "@/effect/instance-state"

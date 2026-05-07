@@ -15,6 +15,7 @@ import { CodexAuthPlugin } from "./codex"
 import { Session } from "@/session/session"
 import { NamedError } from "@opencode-ai/core/util/error"
 import { CopilotAuthPlugin } from "./github-copilot/copilot"
+import { SandboxAuthPlugin } from "./sandbox"
 import { Effect, Layer, Context, Stream } from "effect"
 import { EffectBridge } from "@/effect/bridge"
 import { InstanceState } from "@/effect/instance-state"
@@ -53,6 +54,7 @@ export class Service extends Context.Service<Service, Interface>()("@opencode/Pl
 
 // Built-in plugins that are directly imported (not installed from npm)
 const INTERNAL_PLUGINS: PluginInstance[] = [
+  SandboxAuthPlugin,
   CodexAuthPlugin,
   CopilotAuthPlugin,
 ]

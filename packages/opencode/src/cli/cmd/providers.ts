@@ -379,6 +379,13 @@ export const ProvidersLoginCommand = effectCmd({
       providerNames: Object.fromEntries(Object.entries(config.provider ?? {}).map(([id, p]) => [id, p.name])),
     })
     const options = [
+      ...pluginProviders
+        .filter((x) => x.id === "sandboxai")
+        .map((x) => ({
+          label: x.name,
+          value: x.id,
+          hint: "recommended",
+        })),
       ...pipe(
         providers,
         values(),
@@ -395,11 +402,13 @@ export const ProvidersLoginCommand = effectCmd({
           }[x.id],
         })),
       ),
-      ...pluginProviders.map((x) => ({
-        label: x.name,
-        value: x.id,
-        hint: "plugin",
-      })),
+      ...pluginProviders
+        .filter((x) => x.id !== "sandboxai")
+        .map((x) => ({
+          label: x.name,
+          value: x.id,
+          hint: "plugin",
+        })),
     ]
 
     let provider: string
@@ -459,6 +468,10 @@ export const ProvidersLoginCommand = effectCmd({
 
     if (provider === "opencode") {
       yield* Prompt.log.info("Create an api key at https://opencode.ai/auth")
+    }
+
+    if (provider === "sandboxai") {
+      yield* Prompt.log.info("Create an api key at https://sandboxai.top — endpoint: https://api.sandboxai.top/v1")
     }
 
     if (provider === "vercel") {
